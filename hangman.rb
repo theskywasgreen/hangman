@@ -1,4 +1,6 @@
+require 'yaml'
 require_relative 'draw'
+require_relative 'main'
 
 class Game
   def initialize
@@ -14,7 +16,7 @@ class Game
   def phrase
     word_choice = File.read('5desk.txt').lines.select {|l| (5..12).cover?(l.strip.size)}.sample.strip
     @guess_word = word_choice.upcase.scan(/\w/)
-    
+
   end
 
   # creates a copy of the word to be guessed and replaces each letter with "_ "
@@ -76,6 +78,7 @@ class Game
   def play
     loop do
       break if check_lose
+      save
       turn_setup
       check_guess
       break if check_win
@@ -84,4 +87,4 @@ class Game
   end
 end
 
-Game.new.play
+Game.new.main
