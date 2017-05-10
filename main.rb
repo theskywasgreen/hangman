@@ -28,19 +28,21 @@ class Game
       case choice
       when 'y'
       save_name
-      save = File.open("saved_games/#{@save_name_file}.yml", 'w') { |file| file.write(self.to_yaml) }
       when 'n'
         return
       end
     end
 
     def save_name
-      Dir.mkdir('saved_games') unless File.exist?('saved_games')
-      if File.exist?("saved_games/#{@save_name_file}.yml")
+      if File.exist?("#{@save_name_file}.yml")
+        save = File.open("#{@save_name_file}.yml", 'w') { |file| file.write(self.to_yaml) }
         return
       else
+        Dir.mkdir('saved_games') unless File.exist?('saved_games')
+        Dir.chdir('saved_games')
         puts "Enter savename: "
         @save_name_file = gets.chomp
+        save = File.open("#{@save_name_file}.yml", 'w') { |file| file.write(self.to_yaml) }
       end
     end
 
@@ -49,10 +51,16 @@ class Game
       files = Dir.glob("*.{yml}")
       puts "Here are your saved files to choose from: "
       puts files
-      puts "Please enter filename (without extension) you wish to play."
-      filename = gets.chomp
-      if File.exist?("#{filename}.yml")
-        YAML.load_file("#{filename}.yml").play
+      print "Please enter filename (without extension) you wish to play: "
+      @save_name_file = gets.chomp
+      loop do
+        if File.exist?("#{@save_name_file}.yml")
+          YAML.load_file("#{@save_name_file}.yml").play
+          break
+        else
+          print "No file found. Please retry: "
+          @save_name_file = gets.chomp
+        end
       end
     end
 end
