@@ -1,0 +1,24 @@
+--- !ruby/object:Game
+guess_counter: 0
+guess:
+- E
+- I
+guess_word:
+- V
+- E
+- R
+- T
+- I
+- G
+- O
+print_guess:
+- '_ '
+- E
+- '_ '
+- '_ '
+- I
+- '_ '
+- '_ '
+save_name_file: save1
+player_guess: I
+swapped: false

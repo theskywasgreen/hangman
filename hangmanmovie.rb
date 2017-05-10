@@ -1,10 +1,11 @@
+require 'yaml'
 require_relative 'draw'
+require_relative 'main'
 
 class Game
   def initialize
     @guess_counter = 0
     @guess = []
-    @correct_guess = []
     phrase
     phrase_show
   end
@@ -12,9 +13,9 @@ class Game
   # reads in dictionary file, picks a random word between 5-12 characters long
   # and splits the word into an array of characters
   def phrase
-    word_choice = File.read('5desk.txt').lines.select {|l| (5..12).cover?(l.strip.size)}.sample.strip
-    @guess_word = word_choice.upcase.scan(/\w/)
-    
+    word_choice = File.readlines('movies.txt').sample.strip
+    word_choice = word_choice.upcase!
+    @guess_word = word_choice.scan(/\w|\s/)
   end
 
   # creates a copy of the word to be guessed and replaces each letter with "_ "
@@ -33,7 +34,6 @@ class Game
         if @player_guess =~ /#{letter}/
           @print_guess[j] = @player_guess
           @swapped = true
-          @correct_guess << @player_guess
           break
         else
           break
@@ -48,7 +48,7 @@ class Game
 
   def check_win
     if @print_guess == @guess_word
-      puts "\nYOU GUESSED THE CORRECT ANSWER - #{@print_guess.join(" ")}"
+      puts "\nYOU GUESSED THE CORRECT ANSWER - #{@print_guess.join("")}"
       puts "WOOHOO! YOU WON!"
       return true
     end
@@ -57,7 +57,7 @@ class Game
   def check_lose
     if @guess_counter >= 8
       puts "GAME OVER. YOU'VE BEEN HUNG! :("
-      puts "The correct answer was - #{@guess_word.join}"
+      puts "The film was - #{@guess_word.join}"
       puts "\n"
       return true
     end
@@ -66,16 +66,28 @@ class Game
   # sets up each player guess turn, prints out previous guesses for player to see.
   # shovels the player guess into guess array
   def turn_setup
-    puts "#{@print_guess.join(" ")}"
+    puts "\n#{@print_guess.join(" ")}"
     print "\nPlease enter your letter choice: "
     @player_guess = gets.chomp.upcase
-    @guess << @player_guess
-    puts "\nPrevious Guesses: #{@guess.join(", ")}"
+    check_choice
+  end
+
+  def check_choice
+      if @guess.include?(@player_guess)
+        puts "\nALREADY CHOSEN."
+        turn_setup
+      elsif @player_guess !~ /[A-Z]/
+        puts "\nPLEASE ENTER A VALID CHARACTER"
+        turn_setup
+      else
+        @guess << @player_guess
+      end
   end
 
   def play
     loop do
       break if check_lose
+      save
       turn_setup
       check_guess
       break if check_win
@@ -84,4 +96,4 @@ class Game
   end
 end
 
-Game.new.play
+Game.new.main
