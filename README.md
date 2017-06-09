@@ -1,6 +1,5 @@
-Two versions of the game Hangman. 
-
-One incorporates a dictionary file of random words, another incorporates the top 250 films taken from IMDB. 
+# Hangman
+I have created two versions of the game Hangman. One incorporates a dictionary file of random words, another incorporates the top 250 films taken from IMDB. 
 
 Both versions allow the player to start a new game, load a saved game or exit upon opening the program. 
 The player has the option to save at the beginning of every turn as per the instructions on the odin project. 
